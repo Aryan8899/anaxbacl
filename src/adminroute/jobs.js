@@ -70,7 +70,7 @@ router.get("/:id", param("id").isMongoId().withMessage("Invalid job ID."), async
 router.get("/admin/all", authMiddleware, async (_req, res) => {
   res.set("Cache-Control", "no-store");  // ← yeh add kar
   try {
-    const jobs = await Job.find().sort({ createdAt: -1 });
+    const jobs = await Job.find({ isActive: true }).sort({ createdAt: -1 });
     return res.json({ success: true, jobs });
   } catch (err) {
     return res.status(500).json({ success: false, message: "Could not fetch jobs." });
