@@ -81,4 +81,72 @@ const sendPaymentConfirmationEmail = async ({ name, email, phone, plan, razorpay
   });
 };
 
-module.exports = { sendEnquiryEmail, sendPaymentConfirmationEmail };
+// ── Career Application Email ──────────────────────────────────────────────────
+const sendCareerApplicationEmail = async ({
+  name,
+  email,
+  phone,
+  experience,
+  jobTitle,
+  jobDept,
+  cvBuffer,
+  cvFilename,
+}) => {
+  const transporter = createTransporter();
+  await transporter.verify();
+
+  const fromAddress = `"${process.env.FROM_NAME || "Anax Imperium"}" <${process.env.FROM_EMAIL}>`;
+  const submittedAt = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+  const adminHTML = `
+    <div style="font-family: sans-serif; max-width: 600px;">
+      <h2 style="color: #D4537E;">📋 New Job Application</h2>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666; width:140px;">Name</td><td style="padding:8px; border-bottom:1px solid #f0d0dc; font-weight:600;">${name}</td></tr>
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666;">Email</td><td style="padding:8px; border-bottom:1px solid #f0d0dc;">${email}</td></tr>
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666;">Phone</td><td style="padding:8px; border-bottom:1px solid #f0d0dc;">${phone}</td></tr>
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666;">Experience</td><td style="padding:8px; border-bottom:1px solid #f0d0dc;">${experience}</td></tr>
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666;">Applied For</td><td style="padding:8px; border-bottom:1px solid #f0d0dc; font-weight:600;">${jobTitle}</td></tr>
+        <tr><td style="padding:8px; border-bottom:1px solid #f0d0dc; color:#666;">Department</td><td style="padding:8px; border-bottom:1px solid #f0d0dc;">${jobDept}</td></tr>
+        <tr><td style="padding:8px; color:#666;">Submitted</td><td style="padding:8px;">${submittedAt}</td></tr>
+      </table>
+      <p style="margin-top:16px; color:#888; font-size:13px;">CV is attached to this email.</p>
+    </div>
+  `;
+
+  const userHTML = `
+    <div style="font-family: sans-serif; max-width: 600px;">
+      <h2 style="color: #D4537E;">Hi ${name}, we've received your application! 🎉</h2>
+      <p>Thank you for applying for <b>${jobTitle}</b> at Anax Imperium.</p>
+      <p>Our team will review your profile and get back to you within <b>3–5 business days</b>.</p>
+      <br/>
+      <p style="color:#888; font-size:13px;">— Anax Imperium Careers Team</p>
+    </div>
+  `;
+
+  // 1️⃣ Admin notification with CV attached — sent to aryanpandita003@gmail.com
+  await transporter.sendMail({
+    from: fromAddress,
+    to: "aryanpandita003@gmail.com",
+    replyTo: `"${name}" <${email}>`,
+    subject: `📋 New Application: ${jobTitle} — ${name}`,
+    html: adminHTML,
+    attachments: [
+      {
+        filename: cvFilename,
+        content: cvBuffer,
+        contentType: "application/pdf",
+      },
+    ],
+  });
+
+  // 2️⃣ Confirmation to applicant
+  await transporter.sendMail({
+    from: fromAddress,
+    to: `"${name}" <${email}>`,
+    subject: `Application Received — ${jobTitle} | Anax Imperium`,
+    html: userHTML,
+  });
+};
+
+module.exports = { sendEnquiryEmail, sendPaymentConfirmationEmail, sendCareerApplicationEmail };
