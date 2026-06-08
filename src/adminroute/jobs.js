@@ -68,6 +68,7 @@ router.get("/:id", param("id").isMongoId().withMessage("Invalid job ID."), async
 
 // GET /api/jobs/admin/all — all jobs including inactive (admin panel)
 router.get("/admin/all", authMiddleware, async (_req, res) => {
+  res.set("Cache-Control", "no-store");  // ← yeh add kar
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
     return res.json({ success: true, jobs });
