@@ -127,7 +127,7 @@ const sendCareerApplicationEmail = async ({
   // 1️⃣ Admin notification with CV attached — sent to aryanpandita003@gmail.com
   await transporter.sendMail({
     from: fromAddress,
-    to: "aryanpandita003@gmail.com",
+    to: "anaximperiumsolutions@gmail.com",
     replyTo: `"${name}" <${email}>`,
     subject: `📋 New Application: ${jobTitle} — ${name}`,
     html: adminHTML,
