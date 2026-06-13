@@ -22,8 +22,9 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://anix-new.vercel.app",
   "https://adminanix.vercel.app",
-  "https://anaximperiumsolutions.com",  // 👈 ye add karo
-  "https://www.anaximperiumsolutions.com", // 👈 ye bhi
+  "https://anaximperiumsolutions.com",
+  "https://www.anaximperiumsolutions.com",
+  "https://admin.anaximperiumsolutions.com", // 👈 ye add karo
 ];
 
 app.use(
