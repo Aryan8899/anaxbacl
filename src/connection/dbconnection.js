@@ -6,6 +6,7 @@ const connectDB = async () => {
   if (isConnected) return;
 
   const uri = process.env.MONGODB_URI;
+  console.log(uri)
   if (!uri) {
     throw new Error("MONGODB_URI is not defined in environment variables.");
   }
